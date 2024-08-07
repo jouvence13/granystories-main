@@ -26,3 +26,10 @@ Route::post('/anecdote', [AnecdoteController::class, 'store'])->name('anecdote.s
 Route::get('/anecdotes', [AnecdoteController::class, 'index'])->name('anecdotes');
 
 
+
+Route::get('/book', function () {
+    return view('book');
+});
+
+
+
