@@ -13,3 +13,4 @@ class anecdote extends Model
 
     protected $fillable = ['nom', 'prenom', 'relation', 'ville', 'pays', 'anecdote'];
 }
+

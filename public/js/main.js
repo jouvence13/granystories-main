@@ -38,29 +38,48 @@ function generateAnecdotePages() {
 generateAnecdotePages();
 
 function openBook() {
-    book.style.transform = "translateX(50%)";
-    prevBtn.style.transform = "translateX(-180px)";
-    nextBtn.style.transform = "translateX(180px)";
+    if (window.innerWidth > 768) {
+        book.style.transform = "translateX(50%)";
+        prevBtn.style.transform = "translateX(-100px)"; // Ajuster la valeur si nécessaire
+        nextBtn.style.transform = "translateX(100px)";  // Ajuster la valeur si nécessaire
+    } else {
+        book.style.transform = "translateX(0%)";
+        prevBtn.style.transform = "translateX(0px)";
+        nextBtn.style.transform = "translateX(0px)";
+    }
 }
 
 function closeBook(isAtBeginning) {
-    if(isAtBeginning) {
-        book.style.transform = "translateX(0%)";
+    if (window.innerWidth > 768) {
+        if (isAtBeginning) {
+            book.style.transform = "translateX(0%)";
+            prevBtn.style.transform = "translateX(0px)";
+            nextBtn.style.transform = "translateX(0px)";
+        } else {
+            book.style.transform = "translateX(50%)";
+            prevBtn.style.transform = "translateX(-100px)";
+            nextBtn.style.transform = "translateX(100px)";
+        }
     } else {
-        book.style.transform = "translateX(100%)";
+        book.style.transform = "translateX(0%)";
+        prevBtn.style.transform = "translateX(0px)";
+        nextBtn.style.transform = "translateX(0px)";
     }
-    
-    prevBtn.style.transform = "translateX(0px)";
-    nextBtn.style.transform = "translateX(0px)";
 }
 
+
 function goNextPage() {
-    if(currentLocation < maxLocation) {
-        switch(currentLocation) {
+    if (currentLocation < maxLocation) {
+        switch (currentLocation) {
             case 1:
                 openBook();
                 document.querySelector("#p1").classList.add("flipped");
                 document.querySelector("#p1").style.zIndex = 1;
+                break;
+            case maxLocation - 1:
+                closeBook(false);
+                document.querySelector(`#p${currentLocation}`).classList.add("flipped");
+                document.querySelector(`#p${currentLocation}`).style.zIndex = currentLocation;
                 break;
             default:
                 document.querySelector(`#p${currentLocation}`).classList.add("flipped");
@@ -73,12 +92,17 @@ function goNextPage() {
 }
 
 function goPrevPage() {
-    if(currentLocation > 1) {
-        switch(currentLocation) {
+    if (currentLocation > 1) {
+        switch (currentLocation) {
             case 2:
                 closeBook(true);
                 document.querySelector("#p1").classList.remove("flipped");
                 document.querySelector("#p1").style.zIndex = numOfPapers;
+                break;
+            case maxLocation:
+                openBook();
+                document.querySelector(`#p${currentLocation - 1}`).classList.remove("flipped");
+                document.querySelector(`#p${currentLocation - 1}`).style.zIndex = numOfPapers - currentLocation + 2;
                 break;
             default:
                 document.querySelector(`#p${currentLocation - 1}`).classList.remove("flipped");
@@ -93,12 +117,11 @@ function goPrevPage() {
 function updateButtons() {
     prevBtn.disabled = (currentLocation === 1);
     prevBtn.style.opacity = (currentLocation === 1) ? 0.5 : 1;
-    
+
     nextBtn.disabled = (currentLocation === maxLocation);
     nextBtn.style.opacity = (currentLocation === maxLocation) ? 0.5 : 1;
 }
 
-// Initialisation : s'assurer que tous les papiers sont en position initiale
 function initBook() {
     closeBook(true);
     for (let i = 1; i <= numOfPapers; i++) {
@@ -109,8 +132,21 @@ function initBook() {
     updateButtons();
 }
 
-// Appeler initBook au chargement de la page
-window.addEventListener('load', initBook);
+function handleResize() {
+    if (window.innerWidth <= 768) {
+        closeBook(true);
+    } else {
+        if (currentLocation === 1) {
+            closeBook(true);
+        } else if (currentLocation === maxLocation) {
+            closeBook(false);
+        } else {
+            openBook();
+        }
+    }
+}
 
+window.addEventListener('load', initBook);
+window.addEventListener('resize', handleResize);
 prevBtn.addEventListener("click", goPrevPage);
 nextBtn.addEventListener("click", goNextPage);
