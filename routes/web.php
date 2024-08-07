@@ -21,8 +21,8 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/anecdote/create', [AnecdoteController::class, 'create'])->name('anecdote.create');
-Route::post('/anecdote', [AnecdoteController::class, 'store'])->name('anecdote.store');
+Route::get('/', [AnecdoteController::class, 'create'])->name('anecdote.create');
+Route::post('/anecdote/store', [AnecdoteController::class, 'store'])->name('anecdote.store');
 Route::get('/anecdotes', [AnecdoteController::class, 'index'])->name('anecdotes');
 
 

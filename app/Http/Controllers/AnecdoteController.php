@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\anecdote;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class AnecdoteController extends Controller
 {
@@ -15,25 +16,38 @@ class AnecdoteController extends Controller
 
     public function create()
     {
-        $cities = ['Paris', 'Lyon', 'Marseille', 'Toulouse', 'Nice'];
-        $countries = ['France', 'Allemagne', 'Espagne', 'Italie', 'Royaume-Uni'];
-        $liens = ['Enfants', 'Petits-enfants', 'Gendres/Brue', 'Famille', 'Belle Famille', 'Amis', 'Connaissance'];
-        return view('anecdotes.create', compact('cities','countries', 'liens'));
+
+        return view('anecdotes.create');
     }
 
     public function store(Request $request)
     {
-        $request->validate([
-            'nom' => 'required|string|max:255',
-            'prenom' => 'required|string|max:255',
-            'relation' => 'required|string|max:255',
-            'ville' => 'required|string|max:255',
-            'pays' => 'required|string|max:255',
-            'anecdote' => 'required|string|max:500',
-        ]);
+        Log::info('Début de la fonction store');
 
-        Anecdote::create($request->all());
+        try {
+            Log::info('Données reçues:', $request->all());
 
-        return redirect()->route('home')->with('success', 'Anecdote soumise avec succès !');
+            $validatedData = $request->validate([
+                'nom' => 'required|string|max:255',
+                'prenom' => 'required|string|max:255',
+                'relation' => 'required|string|max:255',
+                'ville' => 'required|string|max:255',
+                'pays' => 'required|string|max:255',
+                'anecdote' => 'required|string|max:500',
+            ]);
+
+            Log::info('Données validées:', $validatedData);
+
+            $anecdote = Anecdote::create($validatedData);
+
+            return redirect()->route('anecdotes')->with('success', 'Anecdote soumise avec succès !');
+        } catch (\Exception $e) {
+            Log::error('Erreur lors de la création de l\'anecdote:', [
+                'message' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            return redirect()->back()->with('error', 'Une erreur est survenue lors de la soumission de l\'anecdote. Veuillez réessayer.');
+        }
     }
 }
