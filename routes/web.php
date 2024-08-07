@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnecdoteController;
+use App\Models\anecdote;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -28,8 +29,7 @@ Route::get('/anecdotes', [AnecdoteController::class, 'index'])->name('anecdotes'
 
 
 Route::get('/book', function () {
-    return view('book');
+
+    $anecdotes = Anecdote::orderBy('created_at', 'asc')->get();
+    return view('book', compact('anecdotes'));
 });
-
-
-

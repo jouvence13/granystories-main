@@ -11,5 +11,5 @@ class anecdote extends Model
 
     protected $table = 'anecdotes';
 
-    protected $fillable = ['nom', 'prenom', 'relation', 'ville', 'pays', 'anecdote','date'];
+    protected $fillable = ['nom', 'prenom', 'relation', 'ville', 'pays', 'anecdote'];
 }
