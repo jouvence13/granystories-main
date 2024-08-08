@@ -20,7 +20,15 @@
         </div>
         <div class="form-group">
             <label for="relation">Lien</label>
-            <input type="text" class="form-control" id="relation" name="relation" maxlength="30" required>
+            <select class="form-control" id="relation" name="relation" required>
+                <option value="Enfants">Enfants</option>
+                <option value="Petits-enfants">Petits-enfants</option>
+                <option value="Gendres/Brue">Gendres/Brue</option>
+                <option value="Famille">Famille</option>
+                <option value="Belle Famille">Belle Famille</option>
+                <option value="Amis">Amis</option>
+                <option value="Connaissance">Connaissance</option>
+            </select>
         </div>
         <div class="form-group">
             <label for="ville">Ville</label>

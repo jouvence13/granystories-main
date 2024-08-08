@@ -25,7 +25,7 @@ Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name
 Route::get('/anecdote/create', [AnecdoteController::class, 'create'])->name('anecdote.create');
 Route::post('/anecdote/store', [AnecdoteController::class, 'store'])->name('anecdote.store');
 Route::get('/anecdotes', [AnecdoteController::class, 'index'])->name('anecdotes');
-
+Route::get('/anecdote/{id}', [AnecdoteController::class, 'show'])->name('anecdote.show');
 
 
 Route::get('/', function () {
