@@ -55,7 +55,7 @@ console.log('Écouteur d\'événement ajouté au bouton de téléchargement');
 downloadBtn.addEventListener("click", downloadPDF);
 function downloadPDF() {
     const bookContainer = document.querySelector(".book-container");
-    console.log('Sending HTML to server:', bookContainer.outerHTML);
+    console.log('Sending HTML to server:', bookContainer.outerHTML); 
 
     axios.post('/download-pdf', {
         html: bookContainer.outerHTML

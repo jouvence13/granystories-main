@@ -22,13 +22,13 @@ Route::get('/', function () {
 Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
-Route::get('/', [AnecdoteController::class, 'create'])->name('anecdote.create');
+Route::get('/anecdote/create', [AnecdoteController::class, 'create'])->name('anecdote.create');
 Route::post('/anecdote/store', [AnecdoteController::class, 'store'])->name('anecdote.store');
 Route::get('/anecdotes', [AnecdoteController::class, 'index'])->name('anecdotes');
 
 
 
-Route::get('/book', function () {
+Route::get('/', function () {
 
     $anecdotes = Anecdote::orderBy('created_at', 'asc')->get();
     return view('book', compact('anecdotes'));
