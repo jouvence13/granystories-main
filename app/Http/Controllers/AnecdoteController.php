@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\anecdote;
+use Barryvdh\Snappy\Facades\SnappyPdf;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
 
@@ -50,4 +52,14 @@ class AnecdoteController extends Controller
             return redirect()->back()->with('error', 'Une erreur est survenue lors de la soumission de l\'anecdote. Veuillez réessayer.');
         }
     }
+
+   public function downloadPDF(Request $request)
+{
+    $html = $request->input('html');
+    $pdf = SnappyPdf::loadHTML($html);
+    $pdfName = 'livre_d_anecdotes.pdf';
+    $pdfPath = $pdf->save($pdfName);
+
+    return response()->download($pdfPath, $pdfName);
+}
 }

@@ -33,3 +33,6 @@ Route::get('/book', function () {
     $anecdotes = Anecdote::orderBy('created_at', 'asc')->get();
     return view('book', compact('anecdotes'));
 });
+
+
+Route::post('/download-pdf', [AnecdoteController::class, 'downloadPDF']);
