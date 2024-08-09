@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AnecdoteController;
+use App\Models\anecdote;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,14 +23,19 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 Route::get('/anecdote/create', [AnecdoteController::class, 'create'])->name('anecdote.create');
-Route::post('/anecdote', [AnecdoteController::class, 'store'])->name('anecdote.store');
+Route::post('/anecdote/store', [AnecdoteController::class, 'store'])->name('anecdote.store');
 Route::get('/anecdotes', [AnecdoteController::class, 'index'])->name('anecdotes');
+Route::get('/anecdote/{id}', [AnecdoteController::class, 'show'])->name('anecdote.show');
 
 
+Route::get('/', function () {
 
-Route::get('/book', function () {
-    return view('book');
+    $anecdotes = Anecdote::orderBy('created_at', 'asc')->get();
+    dd($anecdotes);
+    return view('book', compact('anecdotes'));
 });
 
 
+Route::get('/allAnecdotes', [anecdoteController::class, 'getAnecdotes']);
 
+Route::post('/download-pdf', [AnecdoteController::class, 'downloadPDF']);
