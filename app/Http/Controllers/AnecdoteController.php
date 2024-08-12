@@ -33,7 +33,7 @@ class AnecdoteController extends Controller
                 'relation' => 'required|string|max:255',
                 'ville' => 'required|string|max:255',
                 'pays' => 'required|string|max:255',
-                'anecdote' => 'required|string|max:500',
+                'anecdote' => 'required|string|max:20000',
             ]);
     
             Log::info('Données validées:', $validatedData);

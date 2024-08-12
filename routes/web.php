@@ -31,7 +31,6 @@ Route::get('/anecdote/{id}', [AnecdoteController::class, 'show'])->name('anecdot
 Route::get('/', function () {
 
     $anecdotes = Anecdote::orderBy('created_at', 'asc')->get();
-    dd($anecdotes);
     return view('book', compact('anecdotes'));
 });
 

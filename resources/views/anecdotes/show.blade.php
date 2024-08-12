@@ -71,7 +71,7 @@
             <p><strong>Lien :</strong> {{ $anecdote->relation }}</p>
             <p><strong>Ville :</strong> {{ $anecdote->ville }}</p>
             <p><strong>Pays :</strong> {{ $anecdote->pays }}</p>
-            <p><strong>Anecdote :</strong> {{ $anecdote->anecdote }}</p>
+            <p><strong>Anecdote :</strong> {!! $anecdote->anecdote !!}</p>
             <a href="/" class="btn btn-primary">Voir le livre</a>
         </div>
     </body>

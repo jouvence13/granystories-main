@@ -238,7 +238,20 @@
             color: #2acc80;
         }
     </style>
+<!-- Place the first <script> tag in your HTML's <head> -->
+    <script src="https://cdn.tiny.cloud/1/x8yqfgtr6nfr1pqqwtj5noxr4sla24dbm2uj55o12kivvy2d/tinymce/7/tinymce.min.js" referrerpolicy="origin"></script>
 
+    <!-- Place the following <script> and <textarea> tags your HTML's <body> -->
+        <script>
+            tinymce.init({
+              selector: 'textarea',
+              plugins: 'autolink lists link',
+              toolbar: 'undo redo | bold italic underline | alignleft aligncenter alignright alignjustify | numlist bullist outdent indent | link',
+              menubar: false,
+              branding: false,
+            });
+          </script>
+          
     <script>
         (function() {
             'use strict'
