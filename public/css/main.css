@@ -1,9 +1,9 @@
-html,
+﻿html,
 body {
     height: 100%;
     margin: 0;
     padding: 0;
-    overflow: hidden;
+  
 }
 
 body {
@@ -78,7 +78,7 @@ body {
     overflow: auto;
 }
 
-.back-content {
+.back-content { 
     transform: rotateY(180deg);
 }
 
@@ -140,8 +140,6 @@ button:disabled {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    width: 50px;
-    height: 50px;
     z-index: 1000;
 }
 
@@ -154,7 +152,7 @@ button:disabled {
     right: 150px;
     /* Ajuster ici pour rapprocher le bouton du livre */
 }
-
+ 
 @media (max-width: 768px) {
     .book-container {
         justify-content: flex-start;
@@ -177,13 +175,12 @@ button:disabled {
         /* Centre les boutons */
     }
 
-    #prev-btn,
+    #prev-btn, 
     #next-btn {
         position: relative;
         top: 50%;
         transform: translateY(-50%);
-        width: 50px;
-        height: 50px;
+     
         z-index: 1000;
         /* Assure que les boutons sont au-dessus du livre */
     }
@@ -230,41 +227,6 @@ button:disabled {
 /**/
 
 
-.anecdote-card {
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    background-color: #fff;
-}
-
-.anecdote-header h3 {
-    margin-bottom: 0.5rem;
-    font-size: 1.5rem;
-}
-
-.anecdote-header .relation {
-    margin-bottom: 0.25rem;
-}
-
-.anecdote-body {
-    margin-bottom: 1rem;
-    word-wrap: break-word; /* Ajouté pour éviter le débordement */
-}
-
-.anecdote-footer {
-    border-top: 1px solid #eee;
-    padding-top: 0.5rem;
-    font-size: 0.875rem;
-}
-
-.anecdote-footer .location {
-    color: #888;
-}
-
-.anecdote-footer .date {
-    color: #aaa;
-}
-
 .container {
-    padding: 20px; /* Ajoute du padding pour la marge de sécurité */
+    padding: 5px; /* Ajoute du padding pour la marge de sécurité */
 }
