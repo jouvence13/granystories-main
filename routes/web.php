@@ -17,7 +17,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
-});
+}); 
 
 Auth::routes();
 
@@ -27,7 +27,7 @@ Route::post('/anecdote/store', [AnecdoteController::class, 'store'])->name('anec
 Route::get('/anecdotes', [AnecdoteController::class, 'index'])->name('anecdotes');
 Route::get('/anecdote/{id}', [AnecdoteController::class, 'show'])->name('anecdote.show');
 
-
+ 
 Route::get('/', function () {
 
     $anecdotes = Anecdote::orderBy('created_at', 'asc')->get();

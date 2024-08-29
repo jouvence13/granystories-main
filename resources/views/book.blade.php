@@ -163,88 +163,66 @@
                 </div>
             </div>
 
-            <!-- Page 4 - Merci -->
-            <div id="p4" class="paper">
-                <div class="front">
-                    <div id="f4" class="front-content">
-                        <img class="img-fluid" style="object-fit: cover;width:100%;"
-                            src="{{ asset('image/merci_granny.png') }}" alt="Merci">
-                    </div>
-                </div>
-                <div class="back">
-                    <div id="b4" class="back-content">
-                        <!-- Dos vide -->
-                    </div>
-                </div>
-            </div>
+            <!-- Table des matières dynamique -->
+            @php
+                $itemsPerPage = 45;
+                $totalPages = ceil(count($anecdotes) / $itemsPerPage);
+            @endphp
 
-            <div id="p5" class="paper">
-                <div class="card">
-                    <div class="card-header text-center bg-light border-bottom">
-                        <h6>Liste des témoignants (1/2)</h6>
+            @for ($pageNum = 0; $pageNum < $totalPages; $pageNum++)
+                <div id="p{{ 4 + $pageNum }}" class="paper">
+                    <div class="front">
+
+                        <div id="f{{ 4 + $pageNum }}" class="story-content">
+                            <div class="story-header text-center">
+                                <h6 class="story-name">MERCI À TOUS CEUX QUI ONT DÉJÀ INSÉRÉ LEURS TÉMOIGNAGES</h6>
+                            </div>
+                            <div style="font-size: 8.5px;">
+                                <div class="row justify-content-between">
+                                    <div class="col-6">
+                                        <ul class="list-unstyled">
+                                            @foreach ($anecdotes->slice($pageNum * $itemsPerPage, $itemsPerPage / 2) as $index => $anecdote)
+                                                <li style="margin-bottom: 2px;"
+                                                    data-name="{{ $anecdote->prenom }} {{ $anecdote->nom }}">
+                                                    {{ $anecdote->prenom }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                    <div class="col-6">
+                                        <ul class="list-unstyled">
+                                            @foreach ($anecdotes->slice($pageNum * $itemsPerPage + $itemsPerPage / 2, $itemsPerPage / 2) as $index => $anecdote)
+                                                <li style="margin-bottom: 2px;"
+                                                    data-name="{{ $anecdote->prenom }} {{ $anecdote->nom }}">
+                                                    {{ $anecdote->prenom }}
+                                                </li>
+                                            @endforeach
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="story-footer">
+                                <span class="story-location">{{ $anecdotes->count() }} témoignants</span>
+                                <span class="story-date">{{ $pageNum + 1 }}/{{ $totalPages }}</span>
+                            </div>
+                        </div>
+
                     </div>
-                    <div class="card-body p-3" style="font-size: 8.5px; border: 3px solid rgb(228, 169, 93);; border-radius: 3px;">
-                        <div class="row">
-                            <div class="col-6">
-                                <ul class="list-unstyled">
-                                    @foreach ($anecdotes->slice(0, 22) as $index => $anecdote)
-                                        <li style="margin-bottom: 2px;">
-                                            {{ $index + 1 }}. {{ $anecdote->prenom }} - Page {{ $index + 5 }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="col-6">
-                                <ul class="list-unstyled">
-                                    @foreach ($anecdotes->slice(22, 23) as $index => $anecdote)
-                                        <li style="margin-bottom: 2px;">
-                                            {{ $index + 23 }}. {{ $anecdote->prenom }} - Page {{ $index + 27 }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
+                    <div class="back">
+                        <div id="b{{ 4 + $pageNum }}" class="back-content">
+                            <!-- Contenu du dos de la page (vide ou avec un contenu spécifique si nécessaire) -->
                         </div>
                     </div>
                 </div>
-            </div>
-
-            <div id="p6" class="paper">
-                <div class="card">
-                    <div class="card-header text-center bg-light border-bottom">
-                        <h6>Liste des témoignants (2/2)</h6>
-                    </div>
-                    <div class="card-body p-3" style="font-size: 8.5px; border: 3px solid rgb(228, 169, 93);; border-radius: 3px;">
-                        <div class="row">
-                            <div class="col-6">
-                                <ul class="list-unstyled">
-                                    @foreach ($anecdotes->slice(45, 22) as $index => $anecdote)
-                                        <li style="margin-bottom: 2px;">
-                                            {{ $index + 46 }}. {{ $anecdote->prenom }} - Page {{ $index + 50 }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                            <div class="col-6">
-                                <ul class="list-unstyled">
-                                    @foreach ($anecdotes->slice(67, 23) as $index => $anecdote)
-                                        <li style="margin-bottom: 2px;">
-                                            {{ $index + 68 }}. {{ $anecdote->prenom }} - Page {{ $index + 72 }}
-                                        </li>
-                                    @endforeach
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            @endfor
 
 
 
             <!-- Boucle pour générer dynamiquement les pages d'anecdotes -->
             @foreach ($anecdotes as $index => $anecdote)
-                <div id="p{{ $index + 7 }}" class="paper">
+                <div id="p{{ $index + 4 + $totalPages }}" class="paper">
                     <div class="front">
-                        <div class="story-content">
+                        <div class="story-content" data-name="{{ $anecdote->prenom }} {{ $anecdote->nom }}">
                             <div class="story-header">
                                 <h5 class="story-name">{{ $anecdote->prenom }} {{ $anecdote->nom }}</h5>
                                 <p class="story-relation">{{ $anecdote->relation }}</p>
@@ -259,17 +237,17 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="back">
-                        <div id="b{{ $index + 7 }}" class="back-content p-3">
+                        <div id="b{{ $index + 4 + $totalPages }}" class="back-content p-3">
                             <!-- Dos vide -->
                         </div>
                     </div>
                 </div>
             @endforeach
 
+
             <!-- Dernière page -->
-            <div id="p{{ $anecdotes->count() + 7 }}" class="paper">
+            <div id="p{{ count($anecdotes) + 4 + $totalPages }}" class="paper">
                 <div class="front">
                     <div class="front-content">
                         <img class="img-fluid" style="object-fit: cover; width: 100%;"
@@ -318,7 +296,7 @@
     </script>
     <script>
         function adjustFontSize(element) {
-            const maxFontSize = 12; // Taille maximale de la police en pixels
+            const maxFontSize = 10; // Taille maximale de la police en pixels
             const minFontSize = 3.9; // Taille minimale de la police en pixels
             let fontSize = maxFontSize;
 
@@ -344,37 +322,30 @@
         createAnecdoteLink.style.zIndex = 10;
         createAnecdoteLink.style.fontSize = "12px";
 
-        // Utilisation d'un gestionnaire d'événements pour rediriger au clic
         createAnecdoteLink.addEventListener('click', function(event) {
-            event.preventDefault(); // Empêche l'action par défaut du lien
-            window.location.href = "/anecdote/create"; // Redirection manuelle
+            event.preventDefault();
+            window.location.href = "/anecdote/create";
         });
 
         book.parentNode.appendChild(createAnecdoteLink);
 
         function adjustButtonMargin() {
-            if (window.innerWidth <= 768) {
-                createAnecdoteLink.style.marginTop = "5px"; // Réduire la marge sur mobile
-            } else {
-                createAnecdoteLink.style.marginTop = "20px"; // Marge normale sur les grands écrans
-            }
+            createAnecdoteLink.style.marginTop = window.innerWidth <= 768 ? "5px" : "20px";
         }
 
-        // Appeler la fonction au chargement de la page et lors du redimensionnement
         window.addEventListener('load', adjustButtonMargin);
         window.addEventListener('resize', adjustButtonMargin);
 
         console.log('Lien de création d\'anecdote créé');
 
         let currentLocation = 1;
-        let numOfPapers = document.querySelectorAll('.paper')
-            .length; // Mise à jour pour récupérer dynamiquement le nombre de pages
-        let maxLocation = numOfPapers;
+        const papers = document.querySelectorAll('.paper');
+        let numOfPapers = papers.length;
+        let maxLocation = numOfPapers + 1;
 
         function resizeText(element) {
             let fontSize = 16;
             element.style.fontSize = fontSize + 'px';
-
             while (element.scrollHeight > element.clientHeight && fontSize > 8) {
                 fontSize--;
                 element.style.fontSize = fontSize + 'px';
@@ -386,9 +357,7 @@
             if (prefaceElement) {
                 resizeText(prefaceElement);
             }
-
-            const anecdotePages = document.querySelectorAll('.anecdote-page');
-            anecdotePages.forEach(page => {
+            document.querySelectorAll('.anecdote-page').forEach(page => {
                 resizeText(page.querySelector('.anecdote-text'));
             });
         }
@@ -407,11 +376,7 @@
 
         function closeBook(isAtBeginning) {
             if (window.innerWidth > 768) {
-                if (isAtBeginning) {
-                    book.style.transform = "translateX(0%)";
-                } else {
-                    book.style.transform = "translateX(50%)";
-                }
+                book.style.transform = isAtBeginning ? "translateX(0%)" : "translateX(100%)";
                 prevBtn.style.transform = isAtBeginning ? "translateX(0px)" : "translateX(-100px)";
                 nextBtn.style.transform = isAtBeginning ? "translateX(0px)" : "translateX(100px)";
             } else {
@@ -423,21 +388,15 @@
 
         function goNextPage() {
             if (currentLocation < maxLocation) {
-                switch (currentLocation) {
-                    case 1:
-                        openBook();
-                        document.querySelector("#p1").classList.add("flipped");
-                        document.querySelector("#p1").style.zIndex = 1;
-                        break;
-                    case maxLocation - 1:
-                        closeBook(false);
-                        document.querySelector(`#p${currentLocation}`).classList.add("flipped");
-                        document.querySelector(`#p${currentLocation}`).style.zIndex = currentLocation;
-                        break;
-                    default:
-                        document.querySelector(`#p${currentLocation}`).classList.add("flipped");
-                        document.querySelector(`#p${currentLocation}`).style.zIndex = currentLocation;
-                        break;
+                const paper = papers[currentLocation - 1];
+                if (paper) {
+                    paper.classList.add("flipped");
+                    paper.style.zIndex = currentLocation;
+                }
+                if (currentLocation === 1) {
+                    openBook();
+                } else if (currentLocation === maxLocation - 1) {
+                    closeBook(false);
                 }
                 currentLocation++;
                 updateButtons();
@@ -446,100 +405,76 @@
 
         function goPrevPage() {
             if (currentLocation > 1) {
-                switch (currentLocation) {
-                    case 2:
-                        closeBook(true);
-                        document.querySelector("#p1").classList.remove("flipped");
-                        document.querySelector("#p1").style.zIndex = numOfPapers;
-                        break;
-                    case maxLocation:
-                        closeBook(false);
-                        document.querySelector(`#p${currentLocation - 1}`).classList.remove("flipped");
-                        document.querySelector(`#p${currentLocation - 1}`).style.zIndex = numOfPapers - currentLocation + 2;
-                        break;
-                    default:
-                        document.querySelector(`#p${currentLocation - 1}`).classList.remove("flipped");
-                        document.querySelector(`#p${currentLocation - 1}`).style.zIndex = numOfPapers - currentLocation + 2;
-                        break;
+                const paper = papers[currentLocation - 2];
+                if (paper) {
+                    paper.classList.remove("flipped");
+                    paper.style.zIndex = numOfPapers - currentLocation + 2;
+                }
+                if (currentLocation === 2) {
+                    closeBook(true);
+                } else if (currentLocation === maxLocation) {
+                    openBook();
                 }
                 currentLocation--;
                 updateButtons();
             }
         }
 
-
         function updateButtons() {
-            prevBtn.disabled = (currentLocation === 1);
-            prevBtn.style.opacity = (currentLocation === 1) ? 0.5 : 1;
-            nextBtn.disabled = (currentLocation === maxLocation);
-            nextBtn.style.opacity = (currentLocation === maxLocation) ? 0.5 : 1;
-        }
+            const tableOfContentsPages = document.querySelectorAll('.paper .card').length;
+            const firstAnecdotePage = 5 + tableOfContentsPages;
 
-        function initBook() {
-            console.log('initBook() appelée');
-            closeBook(true);
-            for (let i = 1; i <= numOfPapers; i++) {
-                document.querySelector(`#p${i}`).classList.remove("flipped");
-                document.querySelector(`#p${i}`).style.zIndex = numOfPapers - i + 1;
-            }
-            currentLocation = 1;
-            updateButtons();
-            initializePages();
-        }
-
-        function updateButtons() {
             prevBtn.disabled = (currentLocation === 1);
             prevBtn.style.opacity = (currentLocation === 1) ? 0.5 : 1;
             nextBtn.disabled = (currentLocation === maxLocation);
             nextBtn.style.opacity = (currentLocation === maxLocation) ? 0.5 : 1;
 
-            // Mise à jour des valeurs des attributs
             if (currentLocation === 1) {
                 nextBtn.value = "Voir la page de garde";
-                prevBtn.value = ""; // Pas de texte pour prev
+                prevBtn.value = "";
             } else if (currentLocation === 2) {
                 nextBtn.value = "Voir la préface";
                 prevBtn.value = "Voir la couverture";
             } else if (currentLocation === 3) {
                 nextBtn.value = "Page suivante";
-                prevBtn.value = "Voir la préface";
-            } else if (currentLocation === 4) {
-                nextBtn.value = "Table des index";
-                prevBtn.value = "Page Précedente";
-            } else if (currentLocation === 5) {
-                nextBtn.value = "Index Suivant";
-                prevBtn.value = "Page Précedente";
-            } else if (currentLocation === 6) {
+                prevBtn.value = "Voir la Page de garde";
+            } else if (currentLocation >= 4 && currentLocation < firstAnecdotePage) {
+                nextBtn.value = "Page suivante";
+                prevBtn.value = "Page précédente";
+            } else if (currentLocation === firstAnecdotePage) {
                 nextBtn.value = "Voir les témoignages";
-                prevBtn.value = "Index Précedent";
-            } else if (currentLocation > 6 && currentLocation < maxLocation) {
+                prevBtn.value = "Page précédente";
+            } else if (currentLocation > firstAnecdotePage && currentLocation < maxLocation) {
                 nextBtn.value = "Témoignage suivant";
-                prevBtn.value = "Page Précedente";
+                prevBtn.value = "Page précédente";
             } else if (currentLocation === maxLocation) {
-                nextBtn.value = ""; // Pas de texte pour next
-                prevBtn.value = "Page Précedente";
+                nextBtn.value = "";
+                prevBtn.value = "Page précédente";
             }
 
-            // Met à jour le texte des boutons en fonction des valeurs des attributs
             prevBtn.textContent = prevBtn.value;
             nextBtn.textContent = nextBtn.value;
 
-            // Ajuster la taille des boutons et du texte pour les mobiles
-            if (window.innerWidth <= 768) { // Pour les écrans de 768px ou moins
-                prevBtn.style.fontSize = "6px";
-                nextBtn.style.fontSize = "6px";
-                prevBtn.style.padding = "6px 10px";
-                nextBtn.style.padding = "6px 10px";
+            if (window.innerWidth <= 768) {
+                prevBtn.style.fontSize = nextBtn.style.fontSize = "6px";
+                prevBtn.style.padding = nextBtn.style.padding = "6px 10px";
             } else {
-                prevBtn.style.fontSize = "12px";
-                nextBtn.style.fontSize = "12px";
-                prevBtn.style.padding = "8px 16px";
-                nextBtn.style.padding = "8px 16px";
+                prevBtn.style.fontSize = nextBtn.style.fontSize = "12px";
+                prevBtn.style.padding = nextBtn.style.padding = "8px 16px";
             }
         }
 
-
-
+        function initBook() {
+            console.log('initBook() appelée');
+            closeBook(true);
+            papers.forEach((paper, index) => {
+                paper.classList.remove("flipped");
+                paper.style.zIndex = numOfPapers - index;
+            });
+            currentLocation = 1;
+            updateButtons();
+            initializePages();
+        }
 
         function handleResize() {
             if (window.innerWidth <= 768) {
@@ -561,6 +496,51 @@
         prevBtn.addEventListener("click", goPrevPage);
         nextBtn.addEventListener("click", goNextPage);
     </script>
+    <script>
+        // Fonction pour simuler la navigation vers la page suivante
+        function simulateGoNextPage(times) {
+            if (times > 0) {
+                goNextPage();
+                setTimeout(function() {
+                    simulateGoNextPage(times - 1);
+                }, 50);
+            }
+        }
+
+        // Fonction pour naviguer vers une page spécifique en fonction du nom cliqué
+        function navigateToName(targetName) {
+            let targetPage = null;
+
+            // Parcourir tous les éléments avec la classe .paper pour trouver la page cible
+            document.querySelectorAll('.paper').forEach((paper, index) => {
+                const nameElement = paper.querySelector(`[data-name="${targetName}"]`);
+                if (nameElement) {
+                    targetPage = index + 1; // Index des pages commence à 1
+                }
+            });
+
+            if (targetPage !== null) {
+                const pagesToTurn = targetPage - currentLocation;
+                simulateGoNextPage(pagesToTurn);
+            } else {
+                console.error(`Nom "${targetName}" non trouvé.`);
+            }
+        }
+
+        // Ajouter des écouteurs d'événements aux éléments de la table des matières
+        document.addEventListener('DOMContentLoaded', function() {
+            document.querySelectorAll('.story-content li').forEach(li => {
+                li.style.cursor = 'pointer';
+                li.addEventListener('click', function() {
+                    const targetName = this.getAttribute('data-name');
+                    if (targetName) {
+                        navigateToName(targetName);
+                    }
+                });
+            });
+        });
+    </script>
+
 </body>
 
 </html>
