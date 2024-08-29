@@ -96,6 +96,30 @@
             text-overflow: ellipsis;
 
         }
+
+        .image-container {
+            width: 80%;
+            /* Prendre 80% de la largeur du conteneur */
+            height: auto;
+            /* Ajuster la hauteur automatiquement */
+            margin: 0 auto;
+            /* Centrer horizontalement */
+            display: flex;
+            /* Utiliser flexbox pour centrer verticalement */
+            align-items: center;
+            /* Centrer verticalement */
+            justify-content: center;
+            /* Centrer horizontalement */
+            text-align: center;
+            /* Assurer que l'image est centrée dans le conteneur */
+        }
+
+        .img-fluid {
+            max-width: 100%;
+            /* Assurer que l'image ne dépasse pas le conteneur */
+            height: auto;
+            /* Conserver les proportions de l'image */
+        }
     </style>
 
 
@@ -218,7 +242,7 @@
             <!-- enecdote -->
             @php
                 $pageHeight = 460; // Hauteur approximative de la zone de contenu en pixels (500px - 40px de padding)
-                $fontSize = 7.5; // Taille de police minimale
+                $fontSize = 7; // Taille de police minimale
                 $lineHeight = $fontSize * 1.5; // Hauteur de ligne approximative
                 $charsPerLine = floor(310 / ($fontSize * 0.6)); // Nombre approximatif de caractères par ligne (350px de largeur - 40px de padding)
                 $linesPerPage = floor($pageHeight / $lineHeight);
@@ -233,6 +257,7 @@
                     $pageContent = '';
                     $currentPage = 0;
                     $isFirstPage = true;
+                    $hasImage = !empty($anecdote->image);
                 @endphp
 
                 @while ($anecdoteHtml !== '')
@@ -278,6 +303,11 @@ $contentChunk = substr($anecdoteHtml, 0, $charsPerPage);
                                     style="font-size: {{ $fontSize }}px; line-height: {{ $lineHeight }}px;">
                                     {!! $pageContent !!}
                                 </div>
+                                @if ($anecdoteHtml === '' && $hasImage)
+                                    @php
+                                        $totalPages++; // Page pour l'image
+                                    @endphp
+                                @endif
                                 @if ($anecdoteHtml === '')
                                     <div class="story-footer">
                                         <span class="story-location">{{ $anecdote->ville }},
@@ -295,8 +325,42 @@ $contentChunk = substr($anecdoteHtml, 0, $charsPerPage);
                         </div>
                     </div>
 
+                    @if ($anecdoteHtml === '' && $hasImage)
+                        <!-- Page d'image après l'anecdote -->
+                        <div id="p{{ $totalPages }}" class="paper">
+                            <div class="front">
+                                <div class="story-content">
+                                    <div class="story-header">
+                                        <h5 class="story-name">{{ $anecdote->prenom }} {{ $anecdote->nom }}</h5>
+                                        <p class="story-relation">{{ $anecdote->relation }}</p>
+                                    </div>
+                                    <div class="image-container">
+                                        <img class="img-fluid" style="object-fit: cover;"
+                                            src="{{ asset('image/' . $anecdote->image) }}"
+                                            alt="Image pour l'anecdote">
+                                    </div>
+                                    <div class="story-footer">
+                                        <span class="story-location">{{ $anecdote->ville }},
+                                            {{ $anecdote->pays }}</span>
+                                        <span
+                                            class="story-date">{{ \Carbon\Carbon::parse($anecdote->created_at)->format('d/m/Y') }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="back">
+                                <div class="back-content">
+                                    <!-- Dos vierge -->
+                                </div>
+                            </div>
+                        </div>
+
+                        @php
+                            $totalPages++;
+                            $hasImage = false; // Assurer que l'image est seulement ajoutée une fois
+                        @endphp
+                    @endif
+
                     @php
-                        $totalPages++;
                         $isFirstPage = false;
                     @endphp
                 @endwhile
@@ -316,7 +380,6 @@ $contentChunk = substr($anecdoteHtml, 0, $charsPerPage);
                     </div>
                 </div>
             </div>
-
 
         </div>
 
