@@ -215,39 +215,95 @@
                     </div>
                 </div>
             @endfor
+            <!-- enecdote -->
+            @php
+                $pageHeight = 460; // Hauteur approximative de la zone de contenu en pixels (500px - 40px de padding)
+                $fontSize = 7.5; // Taille de police minimale
+                $lineHeight = $fontSize * 1.5; // Hauteur de ligne approximative
+                $charsPerLine = floor(310 / ($fontSize * 0.6)); // Nombre approximatif de caractères par ligne (350px de largeur - 40px de padding)
+                $linesPerPage = floor($pageHeight / $lineHeight);
+                $charsPerPage = $charsPerLine * $linesPerPage;
 
+                $totalPages = $totalPages + 4; // Ajustement pour les pages précédentes
+            @endphp
 
-
-            <!-- Boucle pour générer dynamiquement les pages d'anecdotes -->
             @foreach ($anecdotes as $index => $anecdote)
-                <div id="p{{ $index + 4 + $totalPages }}" class="paper">
-                    <div class="front">
-                        <div class="story-content" data-name="{{ $anecdote->prenom }} {{ $anecdote->nom }}">
-                            <div class="story-header">
-                                <h5 class="story-name">{{ $anecdote->prenom }} {{ $anecdote->nom }}</h5>
-                                <p class="story-relation">{{ $anecdote->relation }}</p>
+                @php
+                    $anecdoteHtml = $anecdote->anecdote;
+                    $pageContent = '';
+                    $currentPage = 0;
+                    $isFirstPage = true;
+                @endphp
+
+                @while ($anecdoteHtml !== '')
+                    @php
+                        // Couper le texte jusqu'à la limite du conteneur
+$contentChunk = substr($anecdoteHtml, 0, $charsPerPage);
+
+// Trouver la dernière position d'un point, virgule, point d'exclamation ou d'interrogation avant la limite
+                        $lastPunctuationPos = max(
+                            strrpos($contentChunk, '.'),
+                            strrpos($contentChunk, ','),
+                            strrpos($contentChunk, '!'),
+                            strrpos($contentChunk, '?'),
+                        );
+
+                        // Si une ponctuation est trouvée et est proche de la limite, couper ici
+                        if ($lastPunctuationPos !== false && $lastPunctuationPos > $charsPerPage - 20) {
+                            $endPos = $lastPunctuationPos + 1;
+                        } else {
+                            // Sinon, trouver la dernière fin de balise HTML avant la limite
+                            if (preg_match('/<\/[a-z][a-z0-9]*>$/i', $contentChunk, $matches, PREG_OFFSET_CAPTURE)) {
+                                $endPos = $matches[0][1] + strlen($matches[0][0]);
+                            } else {
+                                $endPos = strlen($contentChunk);
+                            }
+                        }
+
+                        $pageContent = substr($anecdoteHtml, 0, $endPos);
+                        // Supprimer le contenu coupé de l'anecdote pour la prochaine itération
+                        $anecdoteHtml = substr($anecdoteHtml, $endPos);
+                    @endphp
+
+                    <div id="p{{ $totalPages }}" class="paper">
+                        <div class="front">
+                            <div class="story-content" data-name="{{ $anecdote->prenom }} {{ $anecdote->nom }}">
+                                @if ($isFirstPage)
+                                    <div class="story-header">
+                                        <h5 class="story-name">{{ $anecdote->prenom }} {{ $anecdote->nom }}</h5>
+                                        <p class="story-relation">{{ $anecdote->relation }}</p>
+                                    </div>
+                                @endif
+                                <div class="story-anecdote"
+                                    style="font-size: {{ $fontSize }}px; line-height: {{ $lineHeight }}px;">
+                                    {!! $pageContent !!}
+                                </div>
+                                @if ($anecdoteHtml === '')
+                                    <div class="story-footer">
+                                        <span class="story-location">{{ $anecdote->ville }},
+                                            {{ $anecdote->pays }}</span>
+                                        <span
+                                            class="story-date">{{ \Carbon\Carbon::parse($anecdote->created_at)->format('d/m/Y') }}</span>
+                                    </div>
+                                @endif
                             </div>
-                            <div class="story-anecdote">
-                                {!! $anecdote->anecdote !!}
-                            </div>
-                            <div class="story-footer">
-                                <span class="story-location">{{ $anecdote->ville }}, {{ $anecdote->pays }}</span>
-                                <span
-                                    class="story-date">{{ \Carbon\Carbon::parse($anecdote->created_at)->format('d/m/Y') }}</span>
+                        </div>
+                        <div class="back">
+                            <div id="b{{ $totalPages }}" class="back-content p-3">
+                                <!-- Dos vide -->
                             </div>
                         </div>
                     </div>
-                    <div class="back">
-                        <div id="b{{ $index + 4 + $totalPages }}" class="back-content p-3">
-                            <!-- Dos vide -->
-                        </div>
-                    </div>
-                </div>
+
+                    @php
+                        $totalPages++;
+                        $isFirstPage = false;
+                    @endphp
+                @endwhile
             @endforeach
 
-
             <!-- Dernière page -->
-            <div id="p{{ count($anecdotes) + 4 + $totalPages }}" class="paper">
+            <div id="p{{ $totalPages }}" class="paper">
                 <div class="front">
                     <div class="front-content">
                         <img class="img-fluid" style="object-fit: cover; width: 100%;"
@@ -260,6 +316,8 @@
                     </div>
                 </div>
             </div>
+
+
         </div>
 
 
@@ -296,8 +354,8 @@
     </script>
     <script>
         function adjustFontSize(element) {
-            const maxFontSize = 10; // Taille maximale de la police en pixels
-            const minFontSize = 3.9; // Taille minimale de la police en pixels
+            const maxFontSize = 9; // Taille maximale de la police en pixels
+            const minFontSize = 5; // Taille minimale de la police en pixels
             let fontSize = maxFontSize;
 
             element.style.fontSize = fontSize + 'px';
